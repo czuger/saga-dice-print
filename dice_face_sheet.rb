@@ -20,6 +20,33 @@ def create_dice( dice, faces_set )
   dice
 end
 
+def round_corners( image )
+  cols = rows = 100
+  radius = 90
+
+  # Set a transparent background: pixels that are transparent will be
+  # discarded from the source image.
+  mask = Image.new(cols, rows) {self.background_color = 'transparent'}
+
+  # Create a white rectangle with rounded corners. This will become the
+  # mask for the area you want to retain in the original image.
+  Draw.new.stroke('none').stroke_width(0).fill('white').
+    roundrectangle(0, 0, cols, rows, radius, radius).
+    draw(mask)
+
+  # Apply the mask and write it out
+  image.composite!(mask, 0, 0, CopyAlphaCompositeOp)
+  image
+end
+
+of1 = round_corners( of1 )
+of2 = round_corners( of2 )
+of3 = round_corners( of3 )
+
+mf1 = round_corners( mf1 )
+mf2 = round_corners( mf2 )
+mf3 = round_corners( mf3 )
+
 1.upto( 8 ).each do
   dice = create_dice( dice, [ of1, of2, of3 ] )
 end
