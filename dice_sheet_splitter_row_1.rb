@@ -3,16 +3,25 @@ include Magick
 
 img = ImageList.new('pics/saga2dices.jpg')
 
-col = 1
 y_decal = 119
-1.upto( 5 ).each do |row|
-  cropped = img.crop( 12, 12 + ( row - 1 ) * y_decal, 100, 100, true)
-  cropped.write( "pics/col#{col}_row_#{row}_face1.jpg" )
+x_decal = 413
 
-  cropped = img.crop( 132, 12 + ( row - 1 ) * y_decal, 100, 100, true)
-  cropped.write( "pics/col#{col}_row_#{row}_face2.jpg" )
+empties_combo = [ [ 2, 5 ], [ 3, 3 ], [ 3, 4 ] ]
 
-  cropped = img.crop( 248, 12 + ( row - 1 ) * y_decal, 100, 100, true)
-  cropped.write( "pics/col#{col}_row_#{row}_face3.jpg" )
+col_start = { 1 => 12, 2 => 424, 3 => 826 }
+
+1.upto( 3 ).each do |col|
+  1.upto( 5 ).each do |row|
+
+    next if empties_combo.include?( [ col, row ] )
+
+    cropped = img.crop( col_start[col], 12 + ( row - 1 ) * y_decal, 100, 100, true)
+    cropped.write( "pics/col#{col}_row_#{row}_face1.jpg" )
+
+    cropped = img.crop( col_start[col] + 120, 12 + ( row - 1 ) * y_decal, 100, 100, true)
+    cropped.write( "pics/col#{col}_row_#{row}_face2.jpg" )
+
+    cropped = img.crop( col_start[col] + 238, 12 + ( row - 1 ) * y_decal, 100, 100, true)
+    cropped.write( "pics/col#{col}_row_#{row}_face3.jpg" )
+  end
 end
-
